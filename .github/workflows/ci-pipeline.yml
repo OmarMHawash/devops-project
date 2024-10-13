@@ -1,11 +1,11 @@
 name: Development check
-run-name: ${{ github.actor }} pushing changes to ${{ github.base_ref }}
+run-name: ${{ github.actor }} pushing changes to ${{ github.head_ref }}
 on:
   pull_request:
     types: [opened, reopened, synchronize, edited]
 jobs:
   test:
-    name: App test run
+    name: Development check
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Linting using flake8...
+      - name: Linting using pylint...
         run: |
           pip install pylint
           pylint $(git ls-files '*.py')
