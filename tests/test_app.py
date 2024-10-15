@@ -1,19 +1,22 @@
-"""WIP Unit tests configuration"""
+"""Unit tests for routes"""
+from main import app
+from app.config import Config
 
-def test_status(client):
+def test_status():
     """Test status"""
-    response = client.get("/status")
+    response = app.test_client().get("/")
     assert response.status_code == 200, response.text
     assert response.json["Status"] == "OK", response.text
 
-def test_version(client):
+def test_version():
     """Test version"""
-    response = client.get("/version")
+    response = app.test_client().get("/version")
     assert response.status_code == 200, response.text
-    # assert response.json["Version"] == Config.client_VERSION, response.text
+    assert response.json["Version"] == Config.APP_VERSION, response.text
 
-def test_temperature(client):
+def test_temperature():
     """Test temperature"""
-    response = client.get("/api/temperature")
+    response = app.test_client().get("/api/temperature")
     assert response.status_code == 200, response.text
-    assert response.json["Average temperature"] is not None, response.text
+    assert "Average temperature" in response.json, response.text
+    assert isinstance(response.json["Average temperature"], (int, float)), response.text

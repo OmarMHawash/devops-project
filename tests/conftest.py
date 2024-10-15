@@ -1,9 +1,7 @@
-"""WIP Test fixtures"""
+"""Pytest fixtures for unit tests"""
 import pytest
-from main import app
 
 @pytest.fixture
-def client():
-    """A test client for the app."""
-    app.config['TESTING'] = True
-    yield app.test_client()
+def my_fixture():
+    """My fixture"""
+    yield "some_value"

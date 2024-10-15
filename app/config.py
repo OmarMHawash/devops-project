@@ -6,7 +6,7 @@ class Config:
     HOST = '127.0.0.1'
     PORT = 5000
     APP_VERSION = "0.0.1"
-    REQUEST_TIMEOUT = 10 # in seconds
+    REQUEST_TIMEOUT = 20 # in seconds
 
 class OpenSense:
     """OPENSENSE API CONFIGURATION"""
