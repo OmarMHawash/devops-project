@@ -1,0 +1,5 @@
+[MASTER]
+ignore=tests/conftest.py,tests/test_app.py
+
+[MESSAGES CONTROL]
+disable=too-few-public-methods
