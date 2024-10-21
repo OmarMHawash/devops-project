@@ -40,6 +40,18 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          scanMetadataReportFile: target/sonar/report-task.txt
+      - name: Run Terrascan
+        id: terrascan
+        uses: tenable/terrascan-action@main
+        with:
+          iac_type: "terraform"
+          iac_version: "v14"
+          policy_type: "aws"
+          only_warn: true
       - name: Build and push docker image
         uses: docker/build-push-action@v6
         with:

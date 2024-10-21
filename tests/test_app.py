@@ -20,3 +20,4 @@ def test_temperature():
     assert response.status_code == 200, response.text
     assert "Average temperature" in response.json, response.text
     assert isinstance(response.json["Average temperature"], (int, float)), response.text
+    assert response.json["status"] in ["Too Cold", "Good", "Too Hot"], response.text

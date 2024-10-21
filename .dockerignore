@@ -2,7 +2,7 @@
 .git
 .gitignore
 .gitattributes
-
+README.md
 
 # CI
 .codeclimate.yml
