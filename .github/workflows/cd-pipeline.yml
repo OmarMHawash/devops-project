@@ -32,20 +32,19 @@ jobs:
           tags: user/app:latest
 
   release:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
-    name: Main Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Ensures the token has the correct permissions
     steps:
-      - run: echo "new job triggered by ${{ github.event_name }} event."
       - uses: actions/checkout@v4
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided automatically by GitHub Actions
         with:
-          tag_name: v${{ github.ref }}
-          release_name: Release v${{ github.ref }}
+          tag_name: vv${{ github.ref_name }}
+          release_name: Release v${{ github.ref_name }}
           body: |
             New Release!
           draft: false
