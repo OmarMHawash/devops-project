@@ -9,6 +9,13 @@ README.md
 .travis.yml
 .taskcluster.yml
 
+# act workflows (local workflows)
+**/local.*
+
+# certificate files
+*.crt
+*.key
+
 # Docker
 docker-compose.yml
 Dockerfile
