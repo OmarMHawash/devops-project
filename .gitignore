@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# act workflows (local workflows)
+**/local.*
+
+# certificate files
+*.crt
+*.key
+
 # Distribution / packaging
 .Python
 build/

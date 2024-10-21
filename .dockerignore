@@ -2,12 +2,19 @@
 .git
 .gitignore
 .gitattributes
-
+README.md
 
 # CI
 .codeclimate.yml
 .travis.yml
 .taskcluster.yml
+
+# act workflows (local workflows)
+**/local.*
+
+# certificate files
+*.crt
+*.key
 
 # Docker
 docker-compose.yml

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-project
+  annotations:
+    # requires setup of apparmor profile
+    container.apparmor.security.beta.kubernetes.io/devops-project: runtime/default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devops-project
+  template:
+    metadata:
+      labels:
+        app: devops-project
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000  # Opt. for shared volume permissions
+        seccompProfile:
+          type: RuntimeDefault
+    containers:
+      - name: devops-project
+        image: omarmhawash/devops-project@sha256:6fe9379ded6dd0e48409b87da814bbdd2e757aea7eab030adbd9ee4dbd319a3b
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 15
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+          requests:
+            memory: "256Mi"
+            cpu: "500m"

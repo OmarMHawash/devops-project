@@ -40,4 +40,10 @@ def temperature() -> dict:
 
     if avg_temp is None:
         return jsonify({"Error": "Temperature data not found"}), 500
-    return jsonify({"Average temperature": avg_temp}), 200
+
+    temp_status = utils.get_temp_status(avg_temp)
+    result = {
+        "Average temperature": avg_temp,
+        "status": temp_status
+    }
+    return jsonify(result), 200

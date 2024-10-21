@@ -70,3 +70,15 @@ def load_dummy_data(filename:str) -> dict:
     except ImportError as e:
         print(f"Error: {e}")
         return None
+
+def get_temp_status(temp:float) -> str:
+    """Returns the temperature status\n
+    Less than 10: Too Cold
+    Between 11-36: Good
+    More than 37: Too Hot
+    """
+    if temp < 10:
+        return "Too Cold"
+    if temp < 36:
+        return "Good"
+    return "Too Hot"
