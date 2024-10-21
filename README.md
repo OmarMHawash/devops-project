@@ -12,6 +12,11 @@
 - default python testing/development `python -m main.py`
 
 - uwsgi for production puropses:
+  NOTE: this is not included with requirements file, since it requires a bigger python image
   `uwsgi --http 127.0.0.1:5000 --wsgi-file main.py --callable app`
 
-access via 127.0.0.1:5000
+access via http://127.0.0.1:5000
+
+for development must:
+have hadolint setup
+lint files before pushing

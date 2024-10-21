@@ -79,7 +79,6 @@ def get_temp_status(temp:float) -> str:
     """
     if temp < 10:
         return "Too Cold"
-    elif temp < 36:
+    if temp < 36:
         return "Good"
-    else:
-        return "Too Hot"
+    return "Too Hot"
