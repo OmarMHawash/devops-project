@@ -12,7 +12,7 @@ on:
 
 jobs:
   docker-build:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     name: push image to dockerhub
     runs-on: ubuntu-latest
     steps:
@@ -29,21 +29,25 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-project:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-project:${{ github.sha }}
 
   release:
+    if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install GitHub CLI
-        run: sudo apt-get install gh -y
-
       - name: Create Release
-        run: |
-          gh release create v0.4 \
-          --title "Release v0.4" \
-          --notes "This is the release description."
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.sha }}
+          release_name: Release v${{ github.sha }}
+          body: |
+            New Release!
+          draft: false
+          prerelease: false
       - run: echo "job status is ${{ job.status }}."
