@@ -29,24 +29,21 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: user/app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-project:latest
 
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Ensures the token has the correct permissions
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh -y
+
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+        run: |
+          gh release create v0.4 \
+          --title "Release v0.4" \
+          --notes "This is the release description."
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided automatically by GitHub Actions
-        with:
-          tag_name: vv${{ github.ref_name }}
-          release_name: Release v${{ github.ref_name }}
-          body: |
-            New Release!
-          draft: false
-          prerelease: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "job status is ${{ job.status }}."
