@@ -1,7 +1,9 @@
 """API Routes & Functions"""
+import json
 from flask import Blueprint, jsonify
 from app.config import Config, OpenSense
-from app.helpers import utils
+from app.helpers import utils, cache, storage
+
 
 main = Blueprint('main', __name__)
 api = Blueprint('api', __name__)
@@ -27,6 +29,12 @@ def temperature() -> dict:
     all_boxes_params: `base_url`?date=:date&phenomenon=:phenomenon&format=:format
     """
 
+    cached = cache.get_cache("temperature")
+    if cached is not None:
+        if Config.DEBUG_MODE:
+            print("Cache hit")
+        return json.loads(cached.decode('utf-8')), 200
+
     if OpenSense.API_URL is None or OpenSense.GET_BOXES_PREFIX is None:
         return jsonify({"Error": "OpenSense API or GET_BOXES_PREFIX not set"}), 500
 
@@ -46,4 +54,22 @@ def temperature() -> dict:
         "Average temperature": avg_temp,
         "status": temp_status
     }
+    cache.set_cache("temperature", result)
     return jsonify(result), 200
+
+@api.route('/store', methods=['GET'])
+def store():
+    """
+    Store endpoint
+    Stores current sensor data to MinIO storage
+    """
+    success, message = storage.store_sensor_data()
+
+    if success:
+        return jsonify({"message": message}), 200
+    return jsonify({"error": message}), 500
+
+@main.route('/health', methods=['GET'])
+def health():
+    """Health Check"""
+    return jsonify({"status": "OK"}), 200

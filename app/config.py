@@ -18,3 +18,18 @@ class OpenSense:
 class TestConfig():
     """TEST CONFIGURATION"""
     TESTING = True
+
+class Valkey:
+    """VALKEY CONFIGURATION"""
+    HOST = "localhost"
+    PORT = 6379
+    DB = 0
+    EXP = 300 # in seconds
+
+class MinIO:
+    """MINIO CONFIGURATION"""
+    ENDPOINT = "localhost:9000"
+    ACCESS_KEY = "minioadmin"
+    SECRET_KEY = "minioadmin"
+    BUCKET_NAME = "sensebox-data"
+    SECURE = False

@@ -20,3 +20,28 @@ access via http://127.0.0.1:5000
 for development must:
 have hadolint setup
 lint files before pushing
+
+## for kubernetes setup:
+
+- setup docker, kind, kubectl
+
+- create kind cluster:
+
+`kind create cluster --config k8s/kind-config.yaml`
+
+apply kubernetes resources:
+
+- Create MinIO secret
+  kubectl apply -f k8s/minio-secret.yaml
+
+- Deploy Redis
+  kubectl apply -f k8s/redis.yaml
+
+- Deploy MinIO
+  kubectl apply -f k8s/minio.yaml
+
+- Deploy Flask API
+  kubectl apply -f k8s/flask-api.yaml
+
+- Deploy Ingress rules
+  kubectl apply -f k8s/ingress.yaml
