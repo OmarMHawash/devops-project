@@ -5,46 +5,61 @@ on:
     types: [opened, reopened, synchronize, edited]
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  MINIO_ENDPOINT: localhost:9000
+
 jobs:
-  test-local:
+  test:
     name: Development check
     runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+      minio:
+        image: minio/minio:latest
+        ports:
+          - 9000:9000
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+        
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.11.8"]
 
     steps:
       - run: echo "new job triggered by ${{ github.event_name}} event."
       - uses: actions/checkout@v4
-      # - name: OSSF Scorecard action
-      #   uses: ossf/scorecard-action@v2.4.0
-      #   with:
-      #     results_file: ./scorecard-results.json
-      #     results_format: json
+
       - name: Setup python v${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Installing dependencies...
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Linting python files using pylint...
         run: |
           pip install pylint
           pylint $(git ls-files '*.py')
+
       - name: Unit Testing using pytest...
         run: |
           python -m pytest
+
       - name: linting dockerfile using hadolint...
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-      # needs sonarqube access
-      # - name: SonarQube Quality Gate check
-      #   uses: sonarsource/sonarqube-quality-gate-action@master
-      #   with:
-      #     scanMetadataReportFile: target/sonar/report-task.txt
+
       - name: Run Terrascan
         id: terrascan
         uses: tenable/terrascan-action@main
@@ -53,10 +68,12 @@ jobs:
           iac_version: "v14"
           policy_type: "aws"
           only_warn: true
-      - name: Build and push docker image
+
+      - name: Build test for docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: false
           tags: github.repository:latest
+
       - run: echo "job status is ${{ job.status }}."

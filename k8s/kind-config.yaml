@@ -1,0 +1,34 @@
+# kind-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.28.13
+    extraPortMappings:
+      - containerPort: 5000
+        hostPort: 8080
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 8443
+        protocol: TCP
+      - containerPort: 6379
+        hostPort: 6379
+        protocol: TCP
+      - containerPort: 9000
+        hostPort: 9000
+        protocol: TCP
+    extraMounts:
+    - hostPath: /var/lib/data
+      containerPath: /var/lib/data
+    kubeadmConfigPatches:
+    - |
+      kind: InitConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          system-reserved: memory=2Gi
+  - role: worker
+    image: kindest/node:v1.28.13
+  - role: worker
+    image: kindest/node:v1.28.13
+  - role: worker
+    image: kindest/node:v1.28.13

@@ -1,0 +1,90 @@
+# flask-api.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-project
+  namespace: default     # Consider using a specific namespace
+  labels:
+    app: devops-project
+    component: api
+spec:
+  selector:
+    app: devops-project
+  type: ClusterIP       # Changed from NodePort since we'll use Ingress
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+    name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-project
+  labels:
+    app: devops-project
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devops-project
+  template:
+    metadata:
+      labels:
+        app: devops-project
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: devops-project
+        image: omarmhawash/devops-project:latest
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+        env:
+        - name: REDIS_HOST
+          value: redis-service
+        - name: MINIO_HOST
+          value: minio-service
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: secret-key
+        readinessProbe:
+          httpGet:
+            path: /health  # Assuming you have a health endpoint
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 15
+        ports:
+        - containerPort: 5000
+          name: http
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
