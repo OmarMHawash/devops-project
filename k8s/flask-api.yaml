@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: devops-project
-  namespace: default
+  namespace: default  # Change if necessary
   labels:
     app: devops-project
     component: api
@@ -12,16 +12,16 @@ spec:
     app: devops-project
   type: ClusterIP
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 5000
-    name: http
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      # name: http
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-project
-  namespace: default
+  namespace: default  # Change if necessary
   labels:
     app: devops-project
     component: api
@@ -38,30 +38,30 @@ spec:
         description: "Deployment of the DevOps project API"
     spec:
       containers:
-      - name: devops-project
-        image: omarmhawash/devops-project:latest
-        imagePullPolicy: Always
-        envFrom:
-          - configMapRef:
-            name: app-config
-          - secretRef:
-            name: api-credentials
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 15
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 30
-          periodSeconds: 15
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "1000m"
-          requests:
-            memory: "256Mi"
-            cpu: "500m"
+        - name: devops-project
+          image: omarmhawash/devops-project:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: api-credentials
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
