@@ -43,13 +43,13 @@ spec:
         - name: MINIO_ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              name: minio-credentials
-              key: access-key
+              name: api-credentials
+              key: minio-access-key
         - name: MINIO_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: minio-credentials
-              key: secret-key
+              name: api-credentials
+              key: minio-secret-key
         ports:
         - containerPort: 9000
           name: api

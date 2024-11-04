@@ -4,7 +4,6 @@ from flask import Blueprint, jsonify
 from app.config import Config, OpenSense
 from app.helpers import utils, cache, storage
 
-
 main = Blueprint('main', __name__)
 api = Blueprint('api', __name__)
 
@@ -12,6 +11,11 @@ api = Blueprint('api', __name__)
 def index():
     """Health Check"""
     return jsonify({"Status": "OK"}), 200
+
+@main.route('/health', methods=['GET'])
+def health():
+    """Health Check"""
+    return jsonify({"status": "OK"}), 200
 
 @main.route('/version', methods=['GET'])
 def version():
@@ -31,8 +35,7 @@ def temperature() -> dict:
 
     cached = cache.get_cache("temperature")
     if cached is not None:
-        if Config.DEBUG_MODE:
-            print("Cache hit")
+        print("Cache hit")
         return json.loads(cached.decode('utf-8')), 200
 
     if OpenSense.API_URL is None or OpenSense.GET_BOXES_PREFIX is None:
@@ -62,14 +65,10 @@ def store():
     """
     Store endpoint
     Stores current sensor data to MinIO storage
+    NOTE: This is Still WIP, not ready yet
     """
     success, message = storage.store_sensor_data()
 
     if success:
         return jsonify({"message": message}), 200
     return jsonify({"error": message}), 500
-
-@main.route('/health', methods=['GET'])
-def health():
-    """Health Check"""
-    return jsonify({"status": "OK"}), 200

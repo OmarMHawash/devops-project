@@ -1,7 +1,7 @@
 """Valkey"""
 import json
 import valkey
-from app.config import Valkey as ValkeyConfig, Config
+from app.config import Valkey as ValkeyConfig
 
 val = valkey.Valkey(host=ValkeyConfig.HOST, port=ValkeyConfig.PORT, db=ValkeyConfig.DB)
 
@@ -20,7 +20,7 @@ def get_cache(key):
     """Get cache"""
     try:
         data = val.get(key)
-        if data is None and Config.DEBUG_MODE:
+        if data is None:
             print("Cache miss")
         return data
     except KeyError as e:

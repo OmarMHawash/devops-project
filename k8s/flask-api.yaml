@@ -3,14 +3,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: devops-project
-  namespace: default     # Consider using a specific namespace
+  namespace: default
   labels:
     app: devops-project
     component: api
 spec:
   selector:
     app: devops-project
-  type: ClusterIP       # Changed from NodePort since we'll use Ingress
+  type: ClusterIP
   ports:
   - protocol: TCP
     port: 5000
@@ -21,6 +21,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-project
+  namespace: default
   labels:
     app: devops-project
     component: api
@@ -33,42 +34,21 @@ spec:
     metadata:
       labels:
         app: devops-project
+      annotations:
+        description: "Deployment of the DevOps project API"
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 2000
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: devops-project
         image: omarmhawash/devops-project:latest
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-        env:
-        - name: REDIS_HOST
-          value: redis-service
-        - name: MINIO_HOST
-          value: minio-service
-        - name: MINIO_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: minio-credentials
-              key: access-key
-        - name: MINIO_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: minio-credentials
-              key: secret-key
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+            name: app-config
+          - secretRef:
+            name: api-credentials
         readinessProbe:
           httpGet:
-            path: /health  # Assuming you have a health endpoint
+            path: /health
             port: 5000
           initialDelaySeconds: 15
           periodSeconds: 10
@@ -78,9 +58,6 @@ spec:
             port: 5000
           initialDelaySeconds: 30
           periodSeconds: 15
-        ports:
-        - containerPort: 5000
-          name: http
         resources:
           limits:
             memory: "512Mi"
