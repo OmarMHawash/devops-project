@@ -130,12 +130,6 @@ Also, any changes pushed directly to the **main** branch trigger a continuous de
 
 ## Kubernetes Setup
 
-Here's a more readable and straightforward version of that section:
-
----
-
-## Kubernetes Setup
-
 This project is set up to run smoothly on a **Kubernetes** cluster, utilizing **Kind** for local testing and development.
 
 ### Architecture Overview
