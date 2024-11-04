@@ -1,10 +1,6 @@
 # Devops Lifecycle Project - HiveBox
 
-<img src="https://img.shields.io/badge/python-3.11.8-blue" alt="python">
-<img src="https://img.shields.io/badge/flask-2.3.2-red" alt="flask">
-<img src="https://img.shields.io/badge/redis-7.4.1-pink" alt="redis">
-<img src="https://img.shields.io/badge/minio-7.2.10-green" alt="minio">
-<img src="https://img.shields.io/badge/docker-24.0.5-darkblue" alt="k8s">
+<img src="https://img.shields.io/badge/python-3.11.8-blue" alt="python"> <img src="https://img.shields.io/badge/flask-2.3.2-red" alt="flask"> <img src="https://img.shields.io/badge/redis-7.4.1-pink" alt="redis"> <img src="https://img.shields.io/badge/minio-7.2.10-green" alt="minio"> <img src="https://img.shields.io/badge/docker-24.0.5-darkblue" alt="k8s">
 
 ## Overview
 
@@ -99,8 +95,8 @@ linting is enforced both locally and on CI pipeline before any changes are pushe
     - **Sample Response:**
       ```json
       {
-        "Average temperature": 21.5,
-        "status": "OK"
+        "Average temperature": 33.5,
+        "status": "Hot"
       }
       ```
 - **Data Storage:**
