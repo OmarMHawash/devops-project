@@ -5,4 +5,4 @@ from app.config import Config
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=Config.DEBUG_MODE, host=Config.HOST, port=Config.PORT)
+    app.run(debug=Config.ENV, host=Config.HOST, port=Config.PORT)
