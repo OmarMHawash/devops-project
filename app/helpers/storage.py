@@ -23,7 +23,6 @@ def store_sensor_data():
         # Get boxes data
         # date_str = utils.get_utc_date(offset_hours=-1)
         boxes_data = utils.load_dummy_data("boxes_sample")
-        
         if not boxes_data:
             return False, "No data available"
 

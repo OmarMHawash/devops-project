@@ -1,7 +1,7 @@
 """Valkey"""
 import json
-from app.config import Valkey as ValkeyConfig, Config
 import valkey
+from app.config import Valkey as ValkeyConfig, Config
 
 val = valkey.Valkey(host=ValkeyConfig.HOST, port=ValkeyConfig.PORT, db=ValkeyConfig.DB)
 
