@@ -21,7 +21,7 @@ def store_sensor_data():
     """
     try:
         # Get boxes data
-        date_str = utils.get_utc_date(offset_hours=-1)
+        # date_str = utils.get_utc_date(offset_hours=-1)
         boxes_data = utils.load_dummy_data("boxes_sample")
         
         if not boxes_data:
@@ -52,5 +52,5 @@ def store_sensor_data():
 
         return True, f"Data stored successfully as {filename}"
 
-    except Exception as e:
+    except ValueError as e:
         return False, f"Error storing data: {str(e)}"
