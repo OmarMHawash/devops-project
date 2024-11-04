@@ -13,7 +13,7 @@ jobs:
   test:
     name: Development check
     runs-on: ubuntu-latest
-    
+
     services:
       redis:
         image: redis:latest
@@ -27,7 +27,7 @@ jobs:
         env:
           MINIO_ROOT_USER: minioadmin
           MINIO_ROOT_PASSWORD: minioadmin
-        
+
     strategy:
       matrix:
         python-version: ["3.11.8"]
